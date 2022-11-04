@@ -37,7 +37,7 @@ export default function Home() {
         <Input ref={inputRef} placeholder='R$29,90' type='number' />
       </div>
 
-      <div style={{ marginTop: 40 }}>
+      <div style={{ marginTop: 32 }}>
         <Button onClick={onSave}>Salvar</Button>
       </div>
     </>

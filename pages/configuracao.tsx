@@ -36,7 +36,7 @@ export default function SettingsPage() {
         placeholder='R$ 2908,90'
       />
 
-      <div style={{ marginTop: 40 }}>
+      <div style={{ marginTop: 32 }}>
         <Button onClick={onSave}>Salvar</Button>
       </div>
     </>

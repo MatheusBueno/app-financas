@@ -10,10 +10,15 @@ const MoneyCard = dynamic(import("@app/components/home/money-card"), {
 });
 
 export default function Home() {
-  const { getDailyExpenses, getDailyTotalCash, getYesterdayExpenses, dailyInitialCash } = useCashFlow();
+  const {
+    getDailyExpenses,
+    getDailyTotalCash,
+    getYesterdayExpenses,
+    dailyInitialCash,
+  } = useCashFlow();
   return (
     <>
-      <h2>Hoje, você pode gastar:</h2>
+      <h1 style={{ fontSize: "1.5rem" }}>Hoje, você pode gastar:</h1>
 
       <MoneyCard
         yesterdayCash={getYesterdayExpenses()}
