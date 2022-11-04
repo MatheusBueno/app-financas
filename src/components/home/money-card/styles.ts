@@ -49,11 +49,20 @@ export const List = styled.ul`
   gap: 16px;
 
   li {
+    list-style: none;
+
+    a {
+      :hover {
+        filter: brightness(90%);
+      }
+    }
+  }
+
+  li * {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    list-style: none;
     gap: 4px;
     text-align: center;
   }

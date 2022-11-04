@@ -51,7 +51,6 @@ export default class MyDocument extends Document {
           />
 
           {/* SEO */}
-          <title>Meu App</title>
           <meta
             name='description'
             content='Acompanhe suas finanças diariamente! Saiba exatamente quanto gastar por dia.'
