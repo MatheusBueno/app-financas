@@ -38,6 +38,17 @@ export default class MyDocument extends Document {
           <link rel='apple-touch-icon' href='/icon.png'></link>
           <meta name='theme-color' content={theme.colors.primary} />
 
+          {/* SEO */}
+          <title>Meu App</title>
+          <meta
+            name='description'
+            content='Acompanhe suas finanças diariamente! Saiba exatamente quanto gastar por dia.'
+          />
+          <meta
+            name='keywords'
+            content='finanças, fluxo de caixa, economizar, dinheiro, financeiro'
+          />
+
           <link rel='preconnect' href='https://fonts.googleapis.com' />
           <link
             rel='preconnect'
