@@ -1,11 +1,13 @@
 import Button from "@app/components/shared/button";
 import Input from "@app/components/shared/input";
+import { useToast } from "@app/hooks/toast";
 import { useUpdateUserConfigFinancial } from "@app/hooks/updateUserConfigFinancial";
 import { useRef } from "react";
 
 export default function SettingsPage() {
   const { getExpenses, getMonthlyRent, updateExpenses, updateMonthlyRent } =
     useUpdateUserConfigFinancial();
+  const { showSuccess } = useToast();
 
   const monthlyRentRef = useRef<HTMLInputElement>(null);
   const expensesRef = useRef<HTMLInputElement>(null);
@@ -13,6 +15,8 @@ export default function SettingsPage() {
   const onSave = () => {
     updateMonthlyRent(Number(monthlyRentRef.current?.value));
     updateExpenses(Number(expensesRef.current?.value));
+
+    showSuccess();
   };
 
   return (

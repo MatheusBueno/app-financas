@@ -2,6 +2,7 @@ import Button from "@app/components/shared/button";
 import Input from "@app/components/shared/input";
 import { DEFAULT_ROTES } from "@app/constants/routes";
 import { useCashFlow } from "@app/hooks/cashFlow";
+import { useToast } from "@app/hooks/toast";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 
@@ -9,6 +10,7 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { showSuccess } = useToast();
 
   const { addExpense } = useCashFlow();
 
@@ -21,6 +23,8 @@ export default function Home() {
       value: Number(value),
       description: descriptionRef.current?.value,
     });
+
+    showSuccess();
 
     router.replace(DEFAULT_ROTES.HOME);
   };
