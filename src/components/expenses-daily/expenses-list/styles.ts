@@ -23,11 +23,11 @@ export const List = styled.ul`
 
 export const Cash = styled.span`
   font-weight: 600;
-  flex: 1;
+  flex: 2;
 `;
 
 export const Description = styled.span`
-  flex: 3;
+  flex: 4;
 `;
 
 export const EmptyList = styled.p`
