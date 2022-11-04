@@ -7,6 +7,7 @@ const theme: DefaultTheme = {
     secondary: "#021b2b",
     dark: "#2b2b2b",
     text: "#f5f5f5",
+    darkText: "#ababab",
     positive: "#90ff17",
     negative: "#fa3419",
   },

@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
       font-size: 16px;
   }
 
-
   a {
     color: inherit;
     text-decoration: none;
@@ -22,7 +21,11 @@ const GlobalStyle = createGlobalStyle`
   }
 
   ul {
-    padding-left: 24px;
+    padding:0
+  }
+
+  li {
+    list-style: none;
   }
 `;
 

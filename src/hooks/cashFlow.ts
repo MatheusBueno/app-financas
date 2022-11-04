@@ -43,7 +43,7 @@ export const useCashFlow = () => {
     );
   };
 
-  const getDailyExpenses = (day: string = getDate()): number => {
+  const getDailyExpensesValue = (day: string = getDate()): number => {
     const dailyExpenses: DailyExpenses = getData(day);
 
     if (!dailyExpenses) {
@@ -82,7 +82,7 @@ export const useCashFlow = () => {
 
   return {
     addExpense,
-    getDailyExpenses,
+    getDailyExpensesValue,
     getYesterdayExpenses,
     getDailyTotalCash,
     dailyInitialCash: getDailyInitialCash(getMonthlyRent(), getExpenses()),

@@ -38,7 +38,12 @@ export default function Home() {
 
       <div style={{ marginTop: 8 }}>
         <span>Qual o valor da compra?</span>
-        <Input ref={inputRef} placeholder='R$29,90' type='number' />
+        <Input
+          ref={inputRef}
+          placeholder='R$29,90'
+          type='number'
+          inputMode='numeric'
+        />
       </div>
 
       <div style={{ marginTop: 32 }}>

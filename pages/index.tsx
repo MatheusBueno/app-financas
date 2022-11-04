@@ -11,7 +11,7 @@ const MoneyCard = dynamic(import("@app/components/home/money-card"), {
 
 export default function Home() {
   const {
-    getDailyExpenses,
+    getDailyExpensesValue,
     getDailyTotalCash,
     getYesterdayExpenses,
     dailyInitialCash,
@@ -23,7 +23,7 @@ export default function Home() {
       <MoneyCard
         yesterdayCash={getYesterdayExpenses()}
         dailyTotalCash={getDailyTotalCash()}
-        dailyExpenses={getDailyExpenses()}
+        dailyExpenses={getDailyExpensesValue()}
         dailyInitialCash={dailyInitialCash}
       />
 

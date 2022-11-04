@@ -29,6 +29,7 @@ export default function SettingsPage() {
         defaultValue={getMonthlyRent()}
         type='number'
         placeholder='R$ 4000,00'
+        inputMode='numeric'
       />
       <hr />
       <h2>Gastos mensais fixos</h2>
@@ -38,6 +39,7 @@ export default function SettingsPage() {
         defaultValue={getExpenses()}
         type='number'
         placeholder='R$ 2908,90'
+        inputMode='numeric'
       />
 
       <div style={{ marginTop: 32 }}>

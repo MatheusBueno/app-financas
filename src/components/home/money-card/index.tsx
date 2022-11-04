@@ -1,4 +1,5 @@
 import { DEFAULT_ROTES } from "@app/constants/routes";
+import formatCurrency from "@app/helpers/formatCurrency";
 import Link from "next/link";
 import { memo } from "react";
 import { MoneyCardProps } from "./props";
@@ -10,30 +11,21 @@ const MoneyCard = memo<MoneyCardProps>(
       <>
         <MoneyCardContent>
           <DailyCash value={dailyTotalCash}>
-            {dailyTotalCash.toLocaleString("pt-br", {
-              style: "currency",
-              currency: "BRL",
-            })}
+            {formatCurrency(dailyTotalCash)}
           </DailyCash>
         </MoneyCardContent>
 
         <List>
           <li>
             <CustomNumber value={yesterdayCash}>
-              {yesterdayCash.toLocaleString("pt-br", {
-                style: "currency",
-                currency: "BRL",
-              })}
+              {formatCurrency(yesterdayCash)}
             </CustomNumber>
 
             <small>Dia anterior</small>
           </li>
           <li>
             <CustomNumber value={dailyInitialCash}>
-              {dailyInitialCash.toLocaleString("pt-br", {
-                style: "currency",
-                currency: "BRL",
-              })}
+              {formatCurrency(dailyInitialCash)}
             </CustomNumber>
             <small>Inicio do dia</small>
           </li>
@@ -44,10 +36,7 @@ const MoneyCard = memo<MoneyCardProps>(
               title='Hístorico de compras do dia'
             >
               <CustomNumber value={dailyExpenses}>
-                {dailyExpenses.toLocaleString("pt-br", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
+                {formatCurrency(dailyExpenses)}
               </CustomNumber>
 
               <small>Gastos do dia</small>
