@@ -42,7 +42,7 @@ export default function Home() {
           ref={inputRef}
           placeholder='R$29,90'
           type='number'
-          inputMode='numeric'
+          inputMode='decimal'
         />
       </div>
 
