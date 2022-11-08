@@ -5,7 +5,7 @@ export const NavbarContainer = styled.nav`
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 8vh;
   padding-top: 8px;
   background: rgba(255, 255, 255, 0.35);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -23,13 +23,12 @@ export const NavbarContainer = styled.nav`
     gap: 8px;
 
     li {
-      height: 50px;
       width: 100%;
       text-align: center;
       list-style: none;
 
       a {
-        height: 50px;
+        height: 6.5vh;
         width: 100%;
         display: flex;
         justify-content: center;

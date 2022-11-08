@@ -6,9 +6,8 @@ import Button from "@app/components/shared/button";
 import { DEFAULT_ROTES } from "@app/constants/routes";
 import { useCashFlowStore } from "@app/store/cacheFlow";
 
-const MoneyCard = dynamic(import("@app/components/home/money-card"), {
-  ssr: false,
-});
+const MoneyCard = dynamic(import("@app/components/home/money-card"));
+const ResetDebit = dynamic(import("@app/components/home/reset-debit"));
 
 export default function Home() {
   const {
@@ -16,12 +15,14 @@ export default function Home() {
     getTotalYesterdayExpenses,
     getTotalDailyCash,
     getTotalInitialDailyCash,
+    getDailyInitialCash,
   } = useCashFlowStore(
     (state) => ({
       getTotalDailyExpenses: state.getTotalDailyExpenses,
       getTotalYesterdayExpenses: state.getTotalYesterdayExpenses,
       getTotalDailyCash: state.getTotalDailyCash,
       getTotalInitialDailyCash: state.getTotalInitialDailyCash,
+      getDailyInitialCash: state.getDailyInitialCash,
     }),
     shallow
   );
@@ -37,9 +38,15 @@ export default function Home() {
         dailyInitialCash={getTotalInitialDailyCash()}
       />
 
+      <ResetDebit
+        dailyCash={getTotalDailyCash()}
+        cashByDay={getDailyInitialCash()}
+      />
+
       <Link href={DEFAULT_ROTES.BUY}>
         <Button>Adicionar gasto</Button>
       </Link>
+
       {/* <Button>Nova entrada</Button> */}
     </>
   );

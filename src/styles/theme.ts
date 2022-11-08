@@ -13,7 +13,7 @@ const theme: DefaultTheme = {
   },
   mensure: {
     navbarHeight: "50px",
-    baseRadius: 4,
+    baseRadius: 8,
   },
 };
 
