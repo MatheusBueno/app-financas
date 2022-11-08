@@ -1,6 +1,7 @@
 export const DEFAULT_ROTES = {
   HOME: "/",
   CONFIG: "/configuracao",
-  NEW_BUY: "/nova-compra",
-  DAILY_HISTORY: 'compras-dia'
+  BUY: "/compras",
+  DAILY_HISTORY: "/compras-dia",
+  UPDATE_BUY: (id: string) => `${DEFAULT_ROTES.BUY}/${id}`,
 };

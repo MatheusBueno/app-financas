@@ -1,4 +1,4 @@
 export interface ExpensesListProps {
-  header: string
-  list: { description?: string; value: number }[];
+  header: string;
+  list: { description?: string; value: number; id: string }[];
 }

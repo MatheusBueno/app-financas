@@ -1,18 +1,18 @@
 import Button from "@app/components/shared/button";
 import Input from "@app/components/shared/input";
 import { DEFAULT_ROTES } from "@app/constants/routes";
-import { useCashFlow } from "@app/hooks/cashFlow";
 import { useToast } from "@app/hooks/toast";
+import { useCashFlowStore } from "@app/store/cacheFlow";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 
-export default function Home() {
+export default function NewExpensePage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { showSuccess } = useToast();
 
-  const { addExpense } = useCashFlow();
+  const addExpense = useCashFlowStore().addExpense;
 
   const onSave = () => {
     const value = inputRef.current?.value;

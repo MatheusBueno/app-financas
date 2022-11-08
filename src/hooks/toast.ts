@@ -12,7 +12,22 @@ export const useToast = () => {
     });
   };
 
+  const showWarning = (options: SweetAlertOptions = {}) => {
+    return Swal.fire({
+      icon: "warning",
+      showCancelButton: true,
+      reverseButtons: true,
+      showConfirmButton: false,
+      showDenyButton: true,
+      denyButtonText: "Sim",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: theme.colors.negative,
+      ...options,
+    });
+  };
+
   return {
     showSuccess,
+    showWarning,
   };
 };

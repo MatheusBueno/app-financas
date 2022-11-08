@@ -1,12 +1,22 @@
 import Button from "@app/components/shared/button";
 import Input from "@app/components/shared/input";
 import { useToast } from "@app/hooks/toast";
-import { useUpdateUserConfigFinancial } from "@app/hooks/updateUserConfigFinancial";
+import { useCashFlowStore } from "@app/store/cacheFlow";
 import { useRef } from "react";
+import shallow from "zustand/shallow";
 
 export default function SettingsPage() {
-  const { getExpenses, getMonthlyRent, updateExpenses, updateMonthlyRent } =
-    useUpdateUserConfigFinancial();
+  const { monthlyRent, expenses, updateMonthlyRent, updateExpenses } =
+    useCashFlowStore(
+      (state) => ({
+        monthlyRent: state.userMonthyRent,
+        expenses: state.userMonthyExpenses,
+        updateExpenses: state.updateUserMonthyExpenses,
+        updateMonthlyRent: state.updateUserMonthyRent,
+      }),
+      shallow
+    );
+
   const { showSuccess } = useToast();
 
   const monthlyRentRef = useRef<HTMLInputElement>(null);
@@ -26,7 +36,7 @@ export default function SettingsPage() {
       <span>Qual o valor da sua renda mensal?</span>
       <Input
         ref={monthlyRentRef}
-        defaultValue={getMonthlyRent()}
+        defaultValue={monthlyRent}
         type='number'
         placeholder='R$ 4000,00'
         inputMode='decimal'
@@ -36,7 +46,7 @@ export default function SettingsPage() {
       <span>Qual o valor dos seus gastos fixos mensais?</span>
       <Input
         ref={expensesRef}
-        defaultValue={getExpenses()}
+        defaultValue={expenses}
         type='number'
         placeholder='R$ 2908,90'
         inputMode='decimal'

@@ -11,10 +11,7 @@ export const useGetToday = () => {
   };
 
   const getFriendlyDate = (date = new Date()) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return date.toLocaleDateString(["pt-BR"]);
   };
 
   return { getDate, getFriendlyDate };

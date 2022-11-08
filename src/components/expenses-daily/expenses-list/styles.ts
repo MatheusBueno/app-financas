@@ -11,7 +11,7 @@ export const HeaderList = styled.h2`
 export const List = styled.ul`
   margin-top: 8px;
 
-  li {
+  li a {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +32,7 @@ export const Description = styled.span`
 
 export const EmptyList = styled.p`
   text-align: center;
-  color: #abababD0;
+  color: #abababd0;
   font-size: 0.95rem;
 
   margin: 16px;
