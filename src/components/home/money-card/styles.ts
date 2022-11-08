@@ -6,22 +6,22 @@ export const MoneyCardContent = styled.div`
   max-width: 400px;
   min-height: 90px;
   margin: 24px auto;
-  border: 1px solid ${(props) => props.theme.colors.primary}50;
-  border-radius: ${(p) => p.theme.mensure.baseRadius}px;
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  align-items: center;
 
+  border: 1px solid ${(props) => props.theme.colors.primary}50;
+  border-radius: ${(p) => p.theme.mensure.baseRadius}px;
   background-color: #00000020;
-  box-shadow: 0 8px 80px 0 ${(props) => props.theme.colors.primary}60;
+  box-shadow: 0 8px 80px 0 ${(props) => props.theme.colors.primary}50;
   backdrop-filter: blur(13.5px);
   -webkit-backdrop-filter: blur(13.5px);
 `;
 
 export const DailyCash = styled.span<{ value: number }>`
   text-align: center;
-  font-family: "Monoton", cursive;
-  font-size: 2.9rem;
+  font-size: 2.5rem;
+  font-weight: 800;
   color: ${(props) => props.theme.colors.primary};
 
   color: ${(p) =>
