@@ -4,6 +4,9 @@ import { Expense } from "@app/models/expense";
 import { persist } from "zustand/middleware";
 
 import create from "zustand";
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
+dayjs.locale("pt-br");
 
 interface CashFlowStore {
   userMonthyRent: number;
@@ -17,18 +20,25 @@ interface CashFlowStore {
   deleteExpense: (id: string) => void;
   updateExpense: (id: string, expense: Omit<Expense, "id">) => void;
 
+  addInitialDailyCash: () => void;
+  loadStartDaily: () => void;
+
   getTotalDailyExpenses: () => number;
-  getTotalYesterdayExpenses: () => number;
+  getDailyBalance: () => DailyExpenses;
+  getTotalYesterdayBalance: () => number;
   getTotalDailyCash: () => number;
   getTotalInitialDailyCash: () => number;
-  getDailyInitialCash: () => number;
   getDailyExpenses: () => DailyExpenses;
   getYesterdayExpenses: () => DailyExpenses;
+  getDailyInitialCash: () => number;
 }
 
-const getDateKey = (date: Date = new Date()) => {
+const getDateKey = (date: Date = new Date()): string => {
   return date.toLocaleDateString(["pt-BR"]);
 };
+
+const initialCashDescription = "INITIAL DAILY";
+const yesterdayCashDescription = "YESTERDAY DAILY";
 
 export const useCashFlowStore = create(
   persist<CashFlowStore>(
@@ -93,12 +103,81 @@ export const useCashFlowStore = create(
         set({ expenses: updatedExpenses });
       },
 
+      loadStartDaily: () => {
+        const { userMonthyRent } = get();
+
+        if (!userMonthyRent) return;
+
+        const updatedExpenses = Object.entries(get().expenses)
+          .sort((a, b) => (a[0] > b[0] ? 1 : -1))
+          .reduce((total, [day, expenses], index, array) => {
+            const initialCash = expenses.find(
+              ({ description }) => description === initialCashDescription
+            );
+
+            const yesterdayCash = expenses.find(
+              ({ description }) => description === yesterdayCashDescription
+            );
+
+            if (!initialCash) {
+              const dailyCash: Expense = {
+                description: initialCashDescription,
+                value: get().getDailyInitialCash(),
+                id: generateUuid(),
+              };
+
+              expenses.push(dailyCash);
+            }
+
+            if (!yesterdayCash && index !== 0) {
+              // get last report filled by user
+              const [lastDay, lastBalance] = array[index - 1];
+
+              const allYesterdaySum = sumDaysWithoutExpenses(
+                day,
+                lastDay,
+                lastBalance.reduce(sumExpenses, 0),
+                get().getDailyInitialCash()
+              );
+
+              const yesterdayCash: Expense = {
+                description: yesterdayCashDescription,
+                value: allYesterdaySum,
+                id: generateUuid(),
+              };
+
+              expenses.push(yesterdayCash);
+            }
+
+            return {
+              ...total,
+              [day]: expenses,
+            };
+          }, {});
+
+        set({ expenses: updatedExpenses });
+      },
+      addInitialDailyCash: () => {
+        const dailyCash: Expense = {
+          description: initialCashDescription,
+          value: get().getDailyInitialCash(),
+          id: generateUuid(),
+        };
+
+        set((state) => ({
+          expenses: {
+            ...state.expenses,
+            [getDateKey()]: [dailyCash, ...state.expenses[getDateKey()]],
+          },
+        }));
+      },
+
       getDailyExpenses: () => {
         const expenses: DailyExpenses = get().expenses[getDateKey()];
 
         if (!expenses) return [];
 
-        return expenses;
+        return expenses.filter((item) => item.value < 0);
       },
       getYesterdayExpenses: () => {
         const previous = new Date();
@@ -108,32 +187,46 @@ export const useCashFlowStore = create(
 
         if (!expenses) return [];
 
-        return expenses;
+        return expenses.filter((item) => item.value < 0);
       },
-      getTotalYesterdayExpenses: () => {
-        const expenses = get().getYesterdayExpenses();
+      getTotalYesterdayBalance: () => {
+        const expenses: DailyExpenses = get().getDailyBalance();
 
-        return expenses.reduce((total, current) => total + current.value, 0);
+        const yesterdayCash = expenses.find(
+          ({ description }) => description === yesterdayCashDescription
+        );
+
+        return yesterdayCash?.value || 0;
       },
       getTotalDailyExpenses: () => {
         const expenses: DailyExpenses = get().getDailyExpenses();
 
         return expenses
+          .filter((item) => item.description !== yesterdayCashDescription)
           .filter((item) => item.value < 0)
-          .reduce((total, current) => total + current.value, 0);
+          .reduce(sumExpenses, 0);
+      },
+      getDailyBalance: () => {
+        const expenses: DailyExpenses = get().expenses[getDateKey()];
+
+        if (!expenses) return [];
+
+        return expenses;
       },
       getTotalDailyCash: () => {
-        const expensesToday = get().getTotalDailyExpenses();
-        const expensesYesterday = get().getTotalYesterdayExpenses();
-        const initialDailyCash = get().getDailyInitialCash();
-
-        return expensesYesterday + expensesToday + initialDailyCash;
+        return get().getDailyBalance().reduce(sumExpenses, 0);
       },
       getTotalInitialDailyCash: () => {
-        const yesterday = get().getTotalYesterdayExpenses();
-        const initialCash = get().getDailyInitialCash();
+        const expenses: DailyExpenses = get().getDailyBalance();
 
-        return yesterday + initialCash;
+        const initialCash = expenses.find(
+          ({ description }) => description === initialCashDescription
+        );
+        const yesterdayCash = expenses.find(
+          ({ description }) => description === yesterdayCashDescription
+        );
+
+        return yesterdayCash!?.value + initialCash!?.value || 0;
       },
       getDailyInitialCash: () => {
         const { userMonthyRent, userMonthyExpenses } = get();
@@ -148,3 +241,29 @@ export const useCashFlowStore = create(
     { name: "my-app-storage" }
   )
 );
+
+const sumDaysWithoutExpenses = (
+  currentDay: string,
+  lastDay: string,
+  lastDayBalance: number,
+  initialDailyCash: number
+): number => {
+  const [d, m, y] = currentDay.split("/");
+  const [d2, m2, y2] = lastDay.split("/");
+
+  const current = dayjs()
+    .set("date", Number(d))
+    .set("month", Number(m) - 1)
+    .set("year", Number(y));
+  const last = dayjs()
+    .set("date", Number(d2))
+    .set("month", Number(m2) - 1)
+    .set("year", Number(y2));
+
+  const diffDays = current.diff(last, "day") - 1;
+
+  return initialDailyCash * diffDays + lastDayBalance;
+};
+
+const sumExpenses = (total: number, current: { value: number }) =>
+  total + current.value;
