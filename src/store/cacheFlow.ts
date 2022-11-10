@@ -19,6 +19,7 @@ interface CashFlowStore {
   getExpense: (id: string) => Expense | null;
   deleteExpense: (id: string) => void;
   updateExpense: (id: string, expense: Omit<Expense, "id">) => void;
+  getExpensesHistory: () => { day: string; expenses: Expense[] }[];
 
   addInitialDailyCash: () => void;
   loadStartDaily: () => void;
@@ -170,6 +171,20 @@ export const useCashFlowStore = create(
             [getDateKey()]: [dailyCash, ...state.expenses[getDateKey()]],
           },
         }));
+      },
+      getExpensesHistory: () => {
+        return Object.entries(get().expenses)
+          .reverse()
+          .map(([daily, expenses]) => {
+            return {
+              day: daily,
+              expenses: expenses.filter(
+                (item) =>
+                  item.description !== initialCashDescription &&
+                  item.description !== yesterdayCashDescription
+              ),
+            };
+          });
       },
 
       getDailyExpenses: () => {
