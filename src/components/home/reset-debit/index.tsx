@@ -17,7 +17,7 @@ const ResetDebit = memo<ResetDebitProps>(
     if (Math.abs(dailyCash) <= expenseByDay)
       return (
         <Container>
-          <span>🥲</span>
+          <span>🥺</span>
           <span>
             Você <DebitDays>não</DebitDays> pode mais gastar hoje!
           </span>

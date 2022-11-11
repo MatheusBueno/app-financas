@@ -4,9 +4,6 @@ import { Expense } from "@app/models/expense";
 import { persist } from "zustand/middleware";
 
 import create from "zustand";
-import dayjs from "dayjs";
-import "dayjs/locale/pt-br";
-dayjs.locale("pt-br");
 
 interface CashFlowStore {
   userMonthyRent: number;
@@ -116,10 +113,6 @@ export const useCashFlowStore = create(
               ({ description }) => description === initialCashDescription
             );
 
-            const yesterdayCash = expenses.find(
-              ({ description }) => description === yesterdayCashDescription
-            );
-
             if (!initialCash) {
               const dailyCash: Expense = {
                 description: initialCashDescription,
@@ -130,7 +123,7 @@ export const useCashFlowStore = create(
               expenses.push(dailyCash);
             }
 
-            if (!yesterdayCash && index !== 0) {
+            if (index !== 0) {
               // get last report filled by user
               const [lastDay, lastBalance] = array[index - 1];
 
@@ -147,7 +140,15 @@ export const useCashFlowStore = create(
                 id: generateUuid(),
               };
 
-              expenses.push(yesterdayCash);
+              const replaceIndex = expenses.findIndex(
+                ({ description }) => description === yesterdayCashDescription
+              );
+
+              if (replaceIndex === -1) {
+                expenses.push(yesterdayCash);
+              } else {
+                expenses.splice(replaceIndex, 1, yesterdayCash);
+              }
             }
 
             return {
@@ -266,18 +267,14 @@ const sumDaysWithoutExpenses = (
   const [d, m, y] = currentDay.split("/");
   const [d2, m2, y2] = lastDay.split("/");
 
-  const current = dayjs()
-    .set("date", Number(d))
-    .set("month", Number(m) - 1)
-    .set("year", Number(y));
-  const last = dayjs()
-    .set("date", Number(d2))
-    .set("month", Number(m2) - 1)
-    .set("year", Number(y2));
+  const current = new Date(Number(y), Number(m) - 1, Number(d));
+  const last = new Date(Number(y2), Number(m2) - 1, Number(d2));
 
-  const diffDays = current.diff(last, "day") - 1;
+  const diff = Math.abs(current.getTime() - last.getTime());
+  const oneDayInMileseconds = 1000 * 60 * 60 * 24;
+  const days = Math.ceil(diff / oneDayInMileseconds) - 1;
 
-  return initialDailyCash * diffDays + lastDayBalance;
+  return initialDailyCash * days + lastDayBalance;
 };
 
 const sumExpenses = (total: number, current: { value: number }) =>
