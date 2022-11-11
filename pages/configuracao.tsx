@@ -2,6 +2,7 @@ import Button from "@app/components/shared/button";
 import Input from "@app/components/shared/input";
 import { useToast } from "@app/hooks/toast";
 import { useCashFlowStore } from "@app/store/cacheFlow";
+import Link from "next/link";
 import { useRef } from "react";
 import shallow from "zustand/shallow";
 
@@ -55,6 +56,8 @@ export default function SettingsPage() {
       <div style={{ marginTop: 32 }}>
         <Button onClick={onSave}>Salvar</Button>
       </div>
+
+      <Link href='/debug'>Debug</Link>
     </>
   );
 }
