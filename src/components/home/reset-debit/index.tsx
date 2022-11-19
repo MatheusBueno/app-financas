@@ -1,22 +1,23 @@
 import { memo } from "react";
 import { ResetDebitProps } from "./props";
+import { TypeResetDebit } from "./constants";
 import { Container, DebitDays } from "./styles";
 
 const ResetDebit = memo<ResetDebitProps>(
-  ({ dailyCash = 1, expenseByDay = 1 }) => {
-    const daysToResetDebit = Math.abs(dailyCash / expenseByDay);
+  ({ totalDailyCash = 1, initCashByDay = 1 }) => {
+    const daysToResetDebit = Math.abs(totalDailyCash / initCashByDay);
 
-    if (dailyCash > 1)
+    if (totalDailyCash > 1)
       return (
-        <Container>
+        <Container data-testid={TypeResetDebit.CAN_EXPENSES}>
           <span>🤑</span>
           <span>Você ainda pode gastar hoje!</span>
         </Container>
       );
 
-    if (Math.abs(dailyCash) <= expenseByDay)
+    if (daysToResetDebit <= 1)
       return (
-        <Container>
+        <Container data-testid={TypeResetDebit.CAN_NOT_EXPENSES}>
           <span>🥺</span>
           <span>
             Você <DebitDays>não</DebitDays> pode mais gastar hoje!
@@ -27,7 +28,7 @@ const ResetDebit = memo<ResetDebitProps>(
     const dayText = daysToResetDebit > 1 ? "dias" : "dia";
 
     return (
-      <Container>
+      <Container data-testid={TypeResetDebit.EXPENSES_DAYS}>
         <span>🥹</span>
         <span>
           Você precisa de{" "}

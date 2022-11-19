@@ -46,7 +46,10 @@ export default function Home() {
         dailyInitialCash={dailyInitialCash}
       />
 
-      <ResetDebit dailyCash={dailyTotalCash} expenseByDay={dailyInitialCash} />
+      <ResetDebit
+        totalDailyCash={dailyTotalCash}
+        initCashByDay={dailyInitialCash}
+      />
 
       <Link href={DEFAULT_ROTES.BUY}>
         <Button>Adicionar gasto</Button>

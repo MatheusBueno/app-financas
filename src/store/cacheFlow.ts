@@ -106,7 +106,9 @@ export const useCashFlowStore = create(
 
         if (!userMonthyRent) return;
 
-        const updatedExpenses = Object.entries(get().expenses)
+        const expenses = applyTodayExpenses(get().expenses);
+
+        const updatedExpenses = Object.entries(expenses)
           .sort((a, b) => (a[0] > b[0] ? 1 : -1))
           .reduce((total, [day, expenses], index, array) => {
             const initialCash = expenses.find(
@@ -279,3 +281,11 @@ const sumDaysWithoutExpenses = (
 
 const sumExpenses = (total: number, current: { value: number }) =>
   total + current.value;
+
+const applyTodayExpenses = (
+  expenses: Record<string, DailyExpenses>
+): Record<string, DailyExpenses> => {
+  if (expenses[getDateKey()]) return expenses;
+
+  return { ...expenses, [getDateKey()]: [] };
+};
