@@ -20,21 +20,27 @@ describe("Reset Debit", () => {
     expect(id).toBeInTheDocument();
   });
 
-  it("should show can not expenses today", () => {
+  it("should not show component", () => {
+    sut(0, 0);
+
+    expect(
+      screen.queryByTestId(TypeResetDebit.CAN_EXPENSES)
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId(TypeResetDebit.EXPENSES_DAYS)
+    ).not.toBeInTheDocument();
+  });
+
+  it("should show '1 dia' to expense", () => {
     sut(1, 1);
 
-    const id = screen.getByTestId(TypeResetDebit.CAN_NOT_EXPENSES);
-    expect(id).toBeInTheDocument();
+    expect(
+      screen.getByTestId(TypeResetDebit.EXPENSES_DAYS)
+    ).toBeInTheDocument();
+    expect(screen.getByText("1 dia")).toBeInTheDocument();
   });
 
-  it("should show can not expenses today", () => {
-    sut(10, -2);
-
-    const id = screen.getByTestId(TypeResetDebit.CAN_NOT_EXPENSES);
-    expect(id).toBeInTheDocument();
-  });
-
-  it("should show days to expense", () => {
+  it("should show '2 dias' to expense", () => {
     sut(10, -20);
 
     const id = screen.getByTestId(TypeResetDebit.EXPENSES_DAYS);
@@ -42,15 +48,7 @@ describe("Reset Debit", () => {
     expect(screen.getByText("2 dias")).toBeInTheDocument();
   });
 
-  it("should show days to expense", () => {
-    sut(10, -100);
-
-    const id = screen.getByTestId(TypeResetDebit.EXPENSES_DAYS);
-    expect(id).toBeInTheDocument();
-    expect(screen.getByText("10 dias")).toBeInTheDocument();
-  });
-
-  it("should show days to expense", () => {
+  it("should show '10 dias' to expense", () => {
     sut(10, -100);
 
     const id = screen.getByTestId(TypeResetDebit.EXPENSES_DAYS);
