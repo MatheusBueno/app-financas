@@ -14,6 +14,14 @@ const Navbar = memo(() => {
         </li>
         <li>
           <Link
+            title='Ir para o histórico de gastos'
+            href={DEFAULT_ROTES.DAILY_HISTORY}
+          >
+            Histórico
+          </Link>
+        </li>
+        <li>
+          <Link
             title='Ir para página de configurações'
             href={DEFAULT_ROTES.CONFIG}
           >

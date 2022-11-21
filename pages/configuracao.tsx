@@ -5,18 +5,25 @@ import { useCashFlowStore } from "@app/store/cacheFlow";
 import Link from "next/link";
 import { useRef } from "react";
 import shallow from "zustand/shallow";
+import formatCurrency from "@app/helpers/formatCurrency";
 
 export default function SettingsPage() {
-  const { monthlyRent, expenses, updateMonthlyRent, updateExpenses } =
-    useCashFlowStore(
-      (state) => ({
-        monthlyRent: state.userMonthyRent,
-        expenses: state.userMonthyExpenses,
-        updateExpenses: state.updateUserMonthyExpenses,
-        updateMonthlyRent: state.updateUserMonthyRent,
-      }),
-      shallow
-    );
+  const {
+    monthlyRent,
+    expenses,
+    updateMonthlyRent,
+    updateExpenses,
+    cashToSpendByDay,
+  } = useCashFlowStore(
+    (state) => ({
+      monthlyRent: state.userMonthyRent,
+      expenses: state.userMonthyExpenses,
+      updateExpenses: state.updateUserMonthyExpenses,
+      updateMonthlyRent: state.updateUserMonthyRent,
+      cashToSpendByDay: state.cashToSpendByDay,
+    }),
+    shallow
+  );
 
   const { showSuccess } = useToast();
 
@@ -57,7 +64,18 @@ export default function SettingsPage() {
         <Button onClick={onSave}>Salvar</Button>
       </div>
 
-      <Link href='/debug'>Debug</Link>
+      {cashToSpendByDay > 0 && (
+        <div style={{ marginTop: 32 }}>
+          Você pode gastar <strong> {formatCurrency(cashToSpendByDay)} </strong>
+          por dia!
+        </div>
+      )}
+
+      <br />
+
+      <Link style={{ fontSize: "0.8rem" }} href='/debug'>
+        Debug
+      </Link>
     </>
   );
 }

@@ -7,21 +7,13 @@ const ResetDebit = memo<ResetDebitProps>(
   ({ totalDailyCash = 1, initCashByDay = 1 }) => {
     const daysToResetDebit = Math.abs(totalDailyCash / initCashByDay);
 
+    if (isNaN(totalDailyCash) || isNaN(daysToResetDebit)) return null;
+
     if (totalDailyCash > 1)
       return (
         <Container data-testid={TypeResetDebit.CAN_EXPENSES}>
           <span>🤑</span>
           <span>Você ainda pode gastar hoje!</span>
-        </Container>
-      );
-
-    if (daysToResetDebit <= 1)
-      return (
-        <Container data-testid={TypeResetDebit.CAN_NOT_EXPENSES}>
-          <span>🥺</span>
-          <span>
-            Você <DebitDays>não</DebitDays> pode mais gastar hoje!
-          </span>
         </Container>
       );
 

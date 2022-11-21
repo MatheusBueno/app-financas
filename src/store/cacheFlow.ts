@@ -8,6 +8,7 @@ import create from "zustand";
 interface CashFlowStore {
   userMonthyRent: number;
   userMonthyExpenses: number;
+  cashToSpendByDay: number;
   updateUserMonthyRent: (value: number) => void;
   updateUserMonthyExpenses: (value: number) => void;
 
@@ -28,7 +29,7 @@ interface CashFlowStore {
   getTotalInitialDailyCash: () => number;
   getDailyExpenses: () => DailyExpenses;
   getYesterdayExpenses: () => DailyExpenses;
-  getDailyInitialCash: () => number;
+  getDailyStartCash: () => number;
 }
 
 const getDateKey = (date: Date = new Date()): string => {
@@ -44,9 +45,28 @@ export const useCashFlowStore = create(
       expenses: {},
       userMonthyRent: 0,
       userMonthyExpenses: 0,
-      updateUserMonthyRent: (userMonthyRent: number) => set({ userMonthyRent }),
-      updateUserMonthyExpenses: (userMonthyExpenses: number) =>
-        set({ userMonthyExpenses }),
+      cashToSpendByDay: 0,
+      updateUserMonthyRent: (userMonthyRent: number) => {
+        set({
+          userMonthyRent,
+          cashToSpendByDay: updateCashToSpent(
+            userMonthyRent,
+            get().userMonthyExpenses
+          ),
+        });
+
+        get().addInitialDailyCash();
+      },
+      updateUserMonthyExpenses: (userMonthyExpenses: number) => {
+        set({
+          userMonthyExpenses,
+          cashToSpendByDay: updateCashToSpent(
+            get().userMonthyRent,
+            userMonthyExpenses
+          ),
+        });
+        get().addInitialDailyCash();
+      },
       addExpense: (expense: Omit<Expense, "id">) => {
         const currentExpense: Expense = {
           ...expense,
@@ -118,7 +138,7 @@ export const useCashFlowStore = create(
             if (!initialCash) {
               const dailyCash: Expense = {
                 description: initialCashDescription,
-                value: get().getDailyInitialCash(),
+                value: get().getDailyStartCash(),
                 id: generateUuid(),
               };
 
@@ -133,7 +153,7 @@ export const useCashFlowStore = create(
                 day,
                 lastDay,
                 lastBalance.reduce(sumExpenses, 0),
-                get().getDailyInitialCash()
+                get().getDailyStartCash()
               );
 
               const yesterdayCash: Expense = {
@@ -164,16 +184,26 @@ export const useCashFlowStore = create(
       addInitialDailyCash: () => {
         const dailyCash: Expense = {
           description: initialCashDescription,
-          value: get().getDailyInitialCash(),
+          value: get().getDailyStartCash(),
           id: generateUuid(),
         };
 
-        set((state) => ({
-          expenses: {
-            ...state.expenses,
-            [getDateKey()]: [dailyCash, ...state.expenses[getDateKey()]],
-          },
-        }));
+        const expensesDaily = get().expenses[getDateKey()];
+
+        const index = expensesDaily.findIndex(
+          (item) => item.description === initialCashDescription
+        );
+
+        if (index === -1) {
+          set((state) => ({
+            expenses: {
+              ...state.expenses,
+              [getDateKey()]: [dailyCash, ...state.expenses[getDateKey()]],
+            },
+          }));
+        } else {
+          expensesDaily.splice(index, 1, dailyCash);
+        }
       },
       getExpensesHistory: () => {
         return Object.entries(get().expenses)
@@ -246,12 +276,13 @@ export const useCashFlowStore = create(
 
         return yesterdayCash!?.value + initialCash!?.value || 0;
       },
-      getDailyInitialCash: () => {
+      getDailyStartCash: () => {
         const { userMonthyRent, userMonthyExpenses } = get();
-        const daysOfMonth = 30;
 
-        const dayliInitialCash =
-          (userMonthyRent - userMonthyExpenses) / daysOfMonth;
+        const dayliInitialCash = updateCashToSpent(
+          userMonthyRent,
+          userMonthyExpenses
+        );
 
         return dayliInitialCash;
       },
@@ -288,4 +319,13 @@ const applyTodayExpenses = (
   if (expenses[getDateKey()]) return expenses;
 
   return { ...expenses, [getDateKey()]: [] };
+};
+
+const updateCashToSpent = (
+  monthRent: number,
+  monthExpenses: number
+): number => {
+  const daysOfMonth = 30;
+
+  return (monthRent - monthExpenses) / daysOfMonth;
 };
