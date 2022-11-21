@@ -3,11 +3,11 @@ import { screen } from "@testing-library/react";
 import { TypeResetDebit } from "./constants";
 import ResetDebit from "./index";
 
-const sut = (startDailyCash: number, totalDailyCash: number) => {
+const sut = (shouldToSpendByDay: number, totalDailyCash: number) => {
   return renderTestingWithTheme(
     <ResetDebit
-      initCashByDay={startDailyCash}
       totalDailyCash={totalDailyCash}
+      shouldToSpendByDay={shouldToSpendByDay}
     />
   );
 };
@@ -18,6 +18,12 @@ describe("Reset Debit", () => {
 
     const id = screen.getByTestId(TypeResetDebit.CAN_EXPENSES);
     expect(id).toBeInTheDocument();
+  });
+
+  it("should show can expenses today", () => {
+    sut(1, 1);
+
+    expect(screen.getByTestId(TypeResetDebit.CAN_EXPENSES)).toBeInTheDocument();
   });
 
   it("should not show component", () => {
@@ -31,15 +37,6 @@ describe("Reset Debit", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("should show '1 dia' to expense", () => {
-    sut(1, 1);
-
-    expect(
-      screen.getByTestId(TypeResetDebit.EXPENSES_DAYS)
-    ).toBeInTheDocument();
-    expect(screen.getByText("1 dia")).toBeInTheDocument();
-  });
-
   it("should show '2 dias' to expense", () => {
     sut(10, -20);
 
@@ -48,11 +45,11 @@ describe("Reset Debit", () => {
     expect(screen.getByText("2 dias")).toBeInTheDocument();
   });
 
-  it("should show '10 dias' to expense", () => {
-    sut(10, -100);
+  it("should show '18 dias' to expense", () => {
+    sut(20.55, -350.48);
 
     const id = screen.getByTestId(TypeResetDebit.EXPENSES_DAYS);
     expect(id).toBeInTheDocument();
-    expect(screen.getByText("10 dias")).toBeInTheDocument();
+    expect(screen.getByText("18 dias")).toBeInTheDocument();
   });
 });

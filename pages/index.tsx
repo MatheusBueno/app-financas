@@ -13,13 +13,20 @@ export default function Home() {
   const loadStartDaily = useCashFlowStore((state) => state.loadStartDaily);
 
   const [
-    { yesterdayCash, dailyTotalCash, dailyExpenses, dailyInitialCash },
+    {
+      yesterdayCash,
+      dailyTotalCash,
+      dailyExpenses,
+      dailyInitialCash,
+      cashToSpendByDay,
+    },
     setState,
   ] = useState({
     yesterdayCash: 0,
     dailyTotalCash: 0,
     dailyExpenses: 0,
     dailyInitialCash: 0,
+    cashToSpendByDay: 0,
   });
 
   useEffect(() => {
@@ -32,6 +39,7 @@ export default function Home() {
       dailyTotalCash: state.getTotalDailyCash(),
       dailyExpenses: state.getTotalDailyExpenses(),
       dailyInitialCash: state.getTotalInitialDailyCash(),
+      cashToSpendByDay: state.cashToSpendByDay,
     });
   });
 
@@ -48,7 +56,7 @@ export default function Home() {
 
       <ResetDebit
         totalDailyCash={dailyTotalCash}
-        initCashByDay={dailyInitialCash}
+        shouldToSpendByDay={cashToSpendByDay}
       />
 
       <Link href={DEFAULT_ROTES.BUY}>

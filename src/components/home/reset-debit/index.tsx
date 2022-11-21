@@ -4,12 +4,12 @@ import { TypeResetDebit } from "./constants";
 import { Container, DebitDays } from "./styles";
 
 const ResetDebit = memo<ResetDebitProps>(
-  ({ totalDailyCash = 1, initCashByDay = 1 }) => {
-    const daysToResetDebit = Math.abs(totalDailyCash / initCashByDay);
+  ({ totalDailyCash = 1, shouldToSpendByDay = 1 }) => {
+    const daysToResetDebit = Math.abs(totalDailyCash / shouldToSpendByDay);
 
-    if (isNaN(totalDailyCash) || isNaN(daysToResetDebit)) return null;
+    if (isNaN(daysToResetDebit)) return null;
 
-    if (totalDailyCash > 1)
+    if (totalDailyCash >= 1)
       return (
         <Container data-testid={TypeResetDebit.CAN_EXPENSES}>
           <span>🤑</span>

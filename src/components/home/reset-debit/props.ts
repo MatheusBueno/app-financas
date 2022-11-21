@@ -1,4 +1,4 @@
 export interface ResetDebitProps {
   totalDailyCash: number;
-  initCashByDay: number;
+  shouldToSpendByDay: number;
 }
